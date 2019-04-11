@@ -166,14 +166,24 @@ function dashboard_notepad_widget_control() {
 
 // show dashboard notes on front end
 function dashboard_notes() {
+
+	$out     = '';
 	$options = dashboard_notepad_widget_options();
-	if (current_user_can('read_dashboard_notes') || in_array('guest', $options['read_dashboard_notes'])) {
-		echo '<div id="dashboard-notes">';
-		if ($options['autop'] == 'yes')
-			echo wpautop(wp_kses_post($options['notes']));
-		else echo wp_kses_post($options['notes']);
-		echo '</div>';
+
+	if ( current_user_can( 'read_dashboard_notes' ) || in_array( 'guest', $options['read_dashboard_notes'], true ) ) {
+
+		$out .= '<div id="dashboard-notes">';
+
+		if ( $options['autop'] === 'yes' ) {
+			$out .= wpautop( wp_kses_post( $options['notes'] ) );
+		} else {
+			$out .= wp_kses_post( $options['notes'] );
+		}
+
+		$out .= '</div>';
 	}
+
+	return $out; // Shortcodes should return information, not echo it.
 }
 
 add_shortcode('dashboard_notes', 'dashboard_notes');
